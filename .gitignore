@@ -1,0 +1,11 @@
+
+# Ignore all log files
+*.log
+
+# Ignore saved stream data
+streamData.txt
+
+
+# Dot  and cache files
+__pycache__
+.vscode
