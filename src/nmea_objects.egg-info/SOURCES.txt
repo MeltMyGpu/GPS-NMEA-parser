@@ -1,0 +1,8 @@
+pyproject.toml
+src/custom_exceptions.py
+src/serial_reader.py
+src/nmea_objects/GpsFixData.py
+src/nmea_objects.egg-info/PKG-INFO
+src/nmea_objects.egg-info/SOURCES.txt
+src/nmea_objects.egg-info/dependency_links.txt
+src/nmea_objects.egg-info/top_level.txt

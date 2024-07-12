@@ -126,16 +126,5 @@ TODO:
 '''
 
 
-def GpsFixData_init_test():
-    from nmea_objects.GpsFixData import GpsFixData
-    test_list = ["$GSGPA", " BLANK"]
-    try:
-        GpsFixData(test_list)
-        LOG.debug(ERR_STR.format(caller= inspect.currentframe().f_code.co_name, Error= "failed"))
-    except ce.InvalidNmeaTypeException as e:
-        LOG.debug(ERR_STR.format(caller= inspect.currentframe().f_code.co_name, Error= "Passed: giving" ))
-        LOG.exception(e)
-        
-
 ''' TEST BLOCK'''
 # GpsFixData_init_test()

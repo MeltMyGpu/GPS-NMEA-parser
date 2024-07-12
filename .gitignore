@@ -8,4 +8,5 @@ streamData.txt
 
 # Dot  and cache files
 __pycache__
+build
 .vscode

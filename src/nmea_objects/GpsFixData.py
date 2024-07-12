@@ -2,8 +2,8 @@
 TODO:
     - Add methods for interacting with the data held by the class.
 '''
-import custom_exceptions as ce
-
+# import custom_exceptions as ce
+import custom_exceptions as ce 
 
 class GpsFixData:
     """
@@ -31,7 +31,7 @@ class GpsFixData:
             test:str = sentence[0]
             test = test.removeprefix("$GS")
             if test != "GGA":
-                raise ce.InvalidNmeaTypeException("The passed sentence was not of type GGA, was: " + test)
+                raise ce.InvalidNmeaTypeException("The passed sentence was not of type GGA, was:  " + test)
             self.msg_id     = sentence[0]
             self.time       = sentence[1]
             self.lat        = sentence[2]
