@@ -41,7 +41,6 @@ def to_degrees(value:str, direction:str) -> float:
         output = -output
     return round(output, 8)
 
-
 def parse_float(target:str) -> float | None:
     """Parses a string to a float, returns None if string is empty"""
     if not target: 
