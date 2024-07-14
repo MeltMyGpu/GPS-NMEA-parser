@@ -40,8 +40,21 @@ def to_degrees(value:str, direction:str) -> float:
     if direction.find('S') > 0 or direction.find('W') > 0:
         output = -output
     return round(output, 8)
-        
 
+
+def parse_float(target:str) -> float | None:
+    """Parses a string to a float, returns None if string is empty"""
+    if not target: 
+        return None 
+    else: 
+        return float(target) 
+
+def parse_int(target:str) -> int | None:
+    """Parses a string to a int, returns None if string is empty"""
+    if not target: 
+        return None 
+    else: 
+        return int(target) 
 
 
 class GpsFixData:
@@ -69,7 +82,7 @@ class GpsFixData:
     
     
     def parse_line(self) -> None:
-        """Parses a NMEA string to send to the correct handler
+        """Parses a NMEA string from the port buffer and sends to the correct handler
         """
         items = self.read_line().split(b',')
         handler = self.type_handlers.get(items[0])
@@ -77,6 +90,8 @@ class GpsFixData:
             handler(items)
         
     
+    ''' TODO:   Currently in testing format to check that parsing is working correctly, 
+                should be refactored to the test module later '''
     def run(self):
         while True:
             self.parse_line()
@@ -86,20 +101,24 @@ class GpsFixData:
 
 
     def gga_handle(self, data: list[str]) -> None:
-        msg_id    :str   = data[0]
-        time      :float = float(data[1])                  # time in UTC
-        lat       :float = to_degrees(data[2], data[3])    # lat in degrees & minuets 
-        lng       :float = to_degrees(data[4], data[5])    # longitude in degrees & minuets 
-        qual      :int   = int(data[6])                    # single digit pos fix indicator 
-        num_sat   :int   = int(data[7])                    # number of satellites used for pos fix
-        hdop      :float = float(data[8])                  # Horizontal dilution of position 
-        alt       :float = float(data[9])                  # Altitude in meters 
-        u_alt     :str   = data[10]                        # Altitude unit (fixed to 'M') 
-        sep       :float = float(data[11])                 # Geoid separation - diff between geoid and mean sea level (in meters) 
-        u_sep     :str   = data[12]                        # Geoid separation unit (fixed to 'M') 
-        diff_age  :float = float(data[13])                 # age of diff correction (blank without DGPS) 
-        diff_stat :float = float(data[14])                 # Id of station providing diff corrections (blank without DGPS) 
-        # cs        :hex   = hex(int(data[15].removeprefix('*'), 16)) # CheckSum 
+        
+        '''NOTE:    All data in the NMEA sentence has a variable assignment below for context reasons,
+                    data that is not required, guaranteed blank, or fix to a certain value has been 
+                    commented out, but left in it's relative position in the sentence.'''
+        msg_id    :str        = data[0]
+        time      :float|None = parse_float(data[1])                    # time in UTC
+        lat       :float|None = to_degrees(data[2], data[3])            # lat in degrees & minuets 
+        lng       :float|None = to_degrees(data[4], data[5])            # longitude in degrees & minuets 
+        qual      :int  |None = parse_int(data[6])                      # single digit pos fix indicator 
+        num_sat   :int  |None = parse_int(data[7])                      # number of satellites used for pos fix
+        hdop      :float|None = parse_float(data[8])                    # Horizontal dilution of position 
+        alt       :float|None = parse_float(data[9])                    # Altitude in meters 
+        # u_alt     :str  |None = data[10]                              # Altitude unit (fixed to 'M') 
+        sep       :float|None = parse_float(data[11])                   # Geoid separation - diff between geoid and mean sea level (in meters) 
+        # u_sep     :str  |None = data[12]                              # Geoid separation unit (fixed to 'M') 
+        diff_age  :float|None = parse_float(data[13])                   # age of diff correction (blank without DGPS) 
+        # diff_stat :float|None = parse_float(data[14])                 # Id of station providing diff corrections (blank without DGPS) 
+        # cs        :hex   = hex(int(data[15].removeprefix('*'), 16))   # CheckSum 
         self.gga_data = dict(
             msg_id   = msg_id,
             time     = time,
@@ -109,11 +128,11 @@ class GpsFixData:
             num_sat  = num_sat,
             hdop     = hdop,
             alt      = alt,
-            u_alt    = u_alt,
+            # u_alt    = u_alt,
             sep      = sep,
-            u_sep    = u_sep,
+            # u_sep    = u_sep,
             diff_age = diff_age,
-            diff_stat= diff_stat,
+            # diff_stat= diff_stat,
             # cs       = cs,
         )
     ...
@@ -124,4 +143,5 @@ class GpsFixData:
     
 
 obj = GpsFixData('COM4', 9600)
+obj.gga_handle("$GPGGA,092725.00,4717.11399,N,00833.91590,E,1,08,1.01,499.6,M,48.0,M,,*5B".split(','))
 obj.run()
