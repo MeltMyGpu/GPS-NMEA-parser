@@ -1,3 +1,0 @@
-custom_exceptions
-nmea_objects
-serial_reader

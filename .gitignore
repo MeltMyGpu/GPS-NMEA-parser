@@ -1,12 +1,14 @@
 
 # Ignore all log files
 *.log
-
-# Ignore saved stream data
 streamData.txt
 
-
 # Dot  and cache files
+.vscode
+
+## package files
+*.egg-info
+
+## Build files
 __pycache__
 build
-.vscode
