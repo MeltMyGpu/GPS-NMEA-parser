@@ -5,6 +5,7 @@ import serial
 import logging
 import inspect
 import os
+import GpsFixData
 
 
 # GLOBAL CONST
@@ -95,13 +96,13 @@ def display_com_stream(stream: serial = None):
     
 
 
-def write_stream_to_file(stream: serial = None):
+def write_stream_to_file(stream: serial = None, line_count: int = 20):
     if stream == None:
         LOG.warning(ERR_STR.format(caller= inspect.currentframe().f_code.co_name, Error= "Trying to read COM stream without providing active serial object"))
         return
     with open(FILE_PATH + "/../streamData.txt","w") as file: 
         i=0
-        while i < 20:
+        while i < line_count:
             file.write(_stream_readline(stream) + "\n")
             i += 1
 
@@ -112,8 +113,15 @@ start_up()
     
 display_com_ports()
 # display_com_stream()
-stream = serial.Serial('COM4')
-write_stream_to_file(stream)
+stream = serial.Serial('COM3')
+write_stream_to_file(stream, 0)
+stream.close()
+obj = GpsFixData.GpsFixData('COM3')
+for x in range(0,20):
+    obj.parse_line()
+
+print(obj.gga_data)
+print(obj.gsv_data)
 # display_com_stream(stream)
 
 

@@ -28,7 +28,7 @@ def to_degrees(value:str, direction:str) -> float:
     """
     if not value:
         return None
-    pre, post = value.split('.')
+    pre, post = value.split(b'.')
     degrees:int = int(pre) // 100 
     minutes = int(pre) % 100
     seconds = 60.0 * int(post) / 10 ** len(post)
@@ -37,7 +37,7 @@ def to_degrees(value:str, direction:str) -> float:
     y = seconds / 3600
     
     output = degrees + (minutes / 60.0 )+ (seconds / 3600.0) 
-    if direction.find('S') > 0 or direction.find('W') > 0:
+    if direction.find(b'S') > 0 or direction.find(b'W') > 0:
         output = -output
     return round(output, 8)
 
@@ -58,7 +58,7 @@ def parse_int(target:str) -> int | None:
 
 class GpsFixData:
 
-    def __init__(self, serial_port:str, bit_rate:int):
+    def __init__(self, serial_port:str, bit_rate:int = 9600):
         self.port_stream = serial.Serial(serial_port)
         self.type_handlers = { # TODO: Extend as different types are added
             b"$GPGGA" : self.gga_parser,
@@ -150,7 +150,7 @@ class GpsFixData:
         sat_list :list[dict[str,int]] = []
         tot_sat:int = (len(data) - 4 ) /  4
         for x in range(0, int(tot_sat - 1)):
-            sat_list.append(sat_data = dict(
+            sat_list.append( dict(
                 sat_id          = parse_int(data[1 + (4 * x)]),         # The satellites ID
                 elevation       = parse_int(data[2 + (4 * x)]),         # Elevation angle (range 0->90)
                 azimuth         = parse_int(data[3 + (4 * x)]),         # Azimuth (range 0->359)
@@ -173,6 +173,6 @@ class GpsFixData:
     
     
 
-obj = GpsFixData('COM4', 9600)
-obj.gga_parser("$GPGGA,092725.00,4717.11399,N,00833.91590,E,1,08,1.01,499.6,M,48.0,M,,*5B".split(','))
-obj.run()
+# obj = GpsFixData('COM4', 9600)
+# obj.gga_parser("$GPGGA,092725.00,4717.11399,N,00833.91590,E,1,08,1.01,499.6,M,48.0,M,,*5B".split(','))
+# obj.run()

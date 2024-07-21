@@ -6,6 +6,7 @@
 - [ ] Impl args for the `run` method on the GpsFixData class things like.
     - choose whether the data is automatically written to file or not.
     - choose a set length of time (or number of lines) for the parser to run for, before terminating itself. 
+- [ ] Add some form of auto com-port check? 
 - [ ] Look into, and possibly implement a fetch to google maps api to get location data once a fix has been established.
 - [ ] Use satellite data to produce a map of satellite locations relative to the receiver module? (Extend to 3D?)
 
